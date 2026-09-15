@@ -1,71 +1,62 @@
-# == Modul Praktikum Python: Functions (Tema: Sistem Perpustakaan) == #
-
 import datetime
 
-# --- VARIABEL GLOBAL ---
-stok_buku_pusat = 500
+# variabel global buat stok sama biaya dasar
+stok_buku = 500
 biaya_admin = 5000
 
-
-# --- DEFINISI FUNGSI ---
+# fungsi dasar tanpa parameter
 def sapa_anggota():
-    print('Selamat datang di Sistem Perpustakaan Daerah')
-    print('Sistem siap menerima perintah\n')
+    print("Selamat datang di Perpustakaan Daerah!")
+    print("Silakan pilih menu yang tersedia.\n")
 
+# fungsi dengan argumen dan default value
+def hitung_denda(hari_telat, tarif=2000):
+    denda = hari_telat * tarif
+    print(f"Buku telat {hari_telat} hari. Total denda: Rp{denda}")
 
-def hitung_denda(hari_terlambat, tarif_per_hari):
-    total_denda = hari_terlambat * tarif_per_hari
-    print('Total denda keterlambatan: Rp', total_denda)
+# manipulasi variabel global dari dalam fungsi
+def pinjam_buku():
+    global stok_buku
+    stok_buku -= 1
+    print(f"Peminjaman sukses. Sisa buku di rak sekarang: {stok_buku}")
 
-
-def proses_peminjaman():
-    global stok_buku_pusat
-    stok_buku_pusat = stok_buku_pusat - 1
-    print('Proses peminjaman berhasil dicatat.')
-    print('Sisa stok buku pusat saat ini:', stok_buku_pusat)
-
-
-def hitung_poin_membaca(jumlah_buku):
+# fungsi rekursif buat ngitung poin member
+def hitung_poin(jumlah_buku):
     if jumlah_buku == 1:
         return 10
     else:
-        return (10 * jumlah_buku) + hitung_poin_membaca(jumlah_buku - 1)
+        return 10 + hitung_poin(jumlah_buku - 1)
 
+# ngetes variable scope (variabel lokal)
+def daftar_member():
+    biaya_kartu = 15000  # ini lokal, gak bisa dipanggil dari luar fungsi
+    total = biaya_admin + biaya_kartu
+    print(f"Biaya bikin kartu member baru: Rp{total}")
 
-def proses_pendaftaran_anggota():
-    biaya_kartu = 15000  # Variabel lokal
-    total_biaya = biaya_admin + biaya_kartu
-    print('Total biaya pendaftaran anggota baru: Rp', total_biaya)
+# pake modul bawaan Python
+def cek_waktu():
+    sekarang = datetime.datetime.now()
+    print(f"Waktu akses: {sekarang.strftime('%Y-%m-%d %H:%M:%S')}")
 
-
-def cetak_waktu_peminjaman():
-    waktu_sekarang = datetime.datetime.now()
-    print('Waktu transaksi tercatat:', waktu_sekarang.strftime("%Y-%m-%d %H:%M:%S"))
-
-
-# --- FUNGSI UTAMA (MAIN) ---
+# fungsi utama buat jalanin semua kode di atas
 def main():
-    print("=== SISTEM PERPUSTAKAAN DIMULAI ===")
-    cetak_waktu_peminjaman()
+    cek_waktu()
     sapa_anggota()
+    
+    daftar_member()
+    print("-" * 30)
+    
+    hitung_denda(3)
+    print("-" * 30)
+    
+    pinjam_buku()
+    pinjam_buku()
+    print("-" * 30)
+    
+    buku_dibaca = 4
+    poin_didapat = hitung_poin(buku_dibaca)
+    print(f"Member ini udah baca {buku_dibaca} buku, dapet poin: {poin_didapat}")
 
-    # Semua pemanggilan fungsi dieksekusi di sini
-    proses_pendaftaran_anggota()
-    print('\n')
-
-    hitung_denda(5, 2000)
-    print('\n')
-
-    proses_peminjaman()
-    proses_peminjaman()
-    print('\n')
-
-    total_buku_dibaca = 4
-    poin = hitung_poin_membaca(total_buku_dibaca)
-    print("Total poin untuk anggota yang membaca", total_buku_dibaca, "buku adalah:", poin)
-    print("=== SISTEM SELESAI ===")
-
-
-# --- ENTRY POINT ---
+# titik awal program jalan
 if __name__ == '__main__':
     main()
